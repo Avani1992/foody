@@ -1,7 +1,6 @@
-{"Menu": {"1": "Roti", "2": "Sabji", "3": "Salad", "4": "South-Indian", "5": "Dessert"},
+{"Menu": ["Roti", "Sabji", "Salad", "South-Indian", "Dessert"],
   "Roti": {"1": "Plain", "2": "Naan", "3": "Parotha", "4": "Chapati"},
   "Sabji": {"11": "SevTomato", "12": "Onion", "13": "Gobi", "14": "Paneer"},
   "Salad": {"5": "Italian", "6": "Green", "7": "Corn", "8": "Brokli"},
   "South-Indian": {"1": "Dosa", "2": "Idly", "3": "Vada", "4": "Upma"},
-  "Dessert": {"1": " GulabJamun", "2": "Ice-Cream", "3": "Lassi", "4": " Rasgulla"},
-  "Fast-Food": {"1": "Dabeli", "2": "Vadapav"}}
+  "Dessert": {"1": " GulabJamun", "2": "Ice-Cream", "3": "Lassi", "4": " Rasgulla"}}

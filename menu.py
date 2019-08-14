@@ -19,8 +19,8 @@ class Menu:
                self.s=dict()
                self.l2=list()
                self.s1=dict()
-               for i in range (1,len(self.data["Menu"])+1):
-                    self.s1[i]=self.data["Menu"][str(i)]             # store item name in list from Menu key.
+               for i in range (0,len(self.data["Menu"])):
+                  self.l2.append(self.data["Menu"][i]) # store item name in list from Menu key.
                #print("L2 is: ",self.l2)
 
                self.l1=a[3].split(",")              # split the value using ',' which is passed threw CLI
@@ -29,9 +29,10 @@ class Menu:
                   self.s[i+1]= self.l1[i]           # store the value in key:value pair in dict form.
                self.data[a[2]]=self.s               # give the key name which is passed from CLI in second possition  and assign value.
                self.length=len(self.data["Menu"])
-               # if(a[2] not  in  self.data["Menu"]): # check key is present in Menu or not.
-               #    self.s1[str((self.length)+1)]=self.data[a[2]]             # If key is not in Menu append it in Menu.
-
+               if(a[2] not  in  self.data["Menu"]): # check key is present in Menu or not.
+                   self.l2.append(a[2])           # If key is not in Menu append it in Menu.
+               self.data["Menu"]=self.l2
+               print("Menu Updated...Check it in foody1.json...")
 
 
 
@@ -49,22 +50,35 @@ class Menu:
                      self.data["Menu"].remove(a[2]) # If it is in Menu remove it from Menu list.
                 with open("foody1.json", "w") as File:# open the json file again in write mode
                   json.dump(self.data,File)             # dump the updated data in json file. so now deleted item is not in dictionary.
+                print("Item Deleted...check it in foody1.json..")
 
         def menu_display(self):                         # Display the menu and submenu.
-           print(self.data["Menu"])                     # display Main Menu.
-           t=input("Enter u r selection:")              # Take input from user from CLI..
+           print("Welcome to the Menu.py...")
+           print("-------------------------------")
+           print("Menu: ",self.data["Menu"])                     # display Main Menu.
+           print("Write 'Exit' for back to Main Menu")
+           t=input("Enter Main Item name:")              # Take input from user from CLI..
 
            while(t!="Exit"):                            # check until user enter Exit.
                if(t in self.data):                      # check entered value from user is present in stored data.
-                  print(self.data[t])                   # If it is display that data which is submenu.
-                  t = input("Enter your selection:")
+                  print(t+" Type:" ,self.data[t])                   # If it is display that data which is submenu.
+                  print("--------------------------------------------------------------------------------")
+                  print("Menu: ", self.data["Menu"])  # display Main Menu.
+                  print("Write 'Exit' for back to Main Menu")
+                  t = input("Enter Main Item name:")
                else:
-                   print("Enter Wrong Item..")
-                   t = input("Enter your selection:")
+                   print("Enter Wrong Item name..")
+                   t = input("Enter Main Item name:")
 
+           while(t=="Exit"):
+               print("---------------------------------------------")
+               print("Pls Write 'Cart select' to place the order..")
+               print("----------------------------------------------")
+               break
 
 obj=Menu()
 obj.Read_file()
+#obj.menu_display()
 #obj.Write_file(sys.argv)
 
 obj.update_data(sys.argv)

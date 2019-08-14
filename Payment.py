@@ -13,63 +13,70 @@ class Payment:
         with open("foody1.json","r") as File1:
             self.data1=json.load(File1)
         File1.close()
-    def payment_display(self):
-        self.q1,self.q2,self.q3,self.q4,self.q5,self.sum=0,0,0,0,0,0
+    def payment_display(self,a):
+      if(a[2]=="displaybill"):
+        print("Welcome to Payment.py..")
+        print("---------------------------")
+        self.q1,self.sum=0,0
         print("Item" + "      " + " Quantity"+"    "+"Price"+"    "+"Total")
         print("-------------------------------------")
         for i,j in self.data.items():                 # Data Entered by user as their order store in Add_to _cart.json
-            for k,l in self.data1.items():              # data from foody1.json
+             for ele in self.data1.values():        # here ele=values of all key of data1.
+                    if(type(ele)!=list):            # chect the type of ele. If it is not list then proceed.so check only it in dict. which we want.
+                        if(i in ele.values()):      # If user data is in ele's value.
+                           self.key=list(ele.keys())             # list of keys for data items eg. for Roti=[1,2,3,4]
+                           self.value=list(ele.values())      #  list of values for data items eg. for Roti=[Plain,Naan,etc]
 
-                if(k not in self.data1["Menu"]):
-                    self.key=list(self.data1[k].keys())             # list of keys for data items eg. for Roti=[1,2,3,4]
-                    self.value=list(self.data1[k].values())         #  list of values for data items eg. for Roti=[Plain,Naan,etc]
-                    if(i in self.value):                           # If user data in value
-                        self.p1=self.key[self.value.index(i)]       # Find the key from value using index of that value eg. key for Plain roti
-                        self.q1=int(j * int(self.p1) * 10)          # Mutliply key with 10.
-                        print(i+"      "+str(j)+"         "+str((int(self.p1))*10)+"        "+str(self.q1)  )
-                        self.sum=self.sum+self.q1
+                           self.p1=self.key[self.value.index(i)]       # Find the key from value using index of that value eg. key for Plain roti
+                           self.q1=int(j * int(self.p1) * 10)          # Mutliply key with 10.
+                           print(i+"      "+str(j)+"         "+str((int(self.p1))*10)+"        "+str(self.q1)  )
+                           self.sum=self.sum+self.q1
 
 
         print("--------------------------------")
         print("Total Amount is:",self.sum)
-        t = input("R u want to pay bill? :")
-        if(t=="Yes" or t=="yes"):
-            obj=Payment()
-            obj.Bill_pay()
-        elif(t=="No" or t=="no"):
-            t=input("R u want to change the order: ")
+        if(self.sum==0):
+            print("Pls Place the order")
+        else:
+         print("For Payment Write 'paybill' ")
+         print("For update(Add/Delete) items Write 'updateorder' ")
+
+    def updateorder(self,a):
+        if(a[2]=="updateorder"):
+            t=input("R u want to change the order(Yes/No): ")
             if(t=="Yes"):
-                t1=input("R u want to add some items?: ")
+                t1=input("R u want to add some items(Yes/No)?: ")
                 if(t1=="Yes"):
-                    print("Add items from Menu")
+                    print("Add items from Cart select")
                     obj=Cart()
                     obj.Read_file()             # If user wants to add item in oreder back to the cart for display menu and add item in cart.
-                    obj.cart_display()
+                    obj.select(sys.argv)
                     obj1=Payment()
                     obj1.Read_file()
-                    obj1.payment_display()      # After adding item in cart further ask for payment option
-                elif(t1=="No"):
-                    t1=input("R u want to delete some items?:")
-                    if(t1=="Yes"):
+                    obj1.payment_display(sys.argv)      # After adding item in cart further ask for payment option
 
+                elif(t1=="No"):
+                    t1=input("R u want to delete some items(Yes/No)?:")
+                    if(t1=="Yes"):
+                        with open("Add_to_cart.json", "r") as File:
+                            self.data = json.load(File)
+                        print(" U r Order:")
+                        print("---------------")
+                        for i,j in self.data.items():
+                            print(i,j)
+                        print("------------------------")
                         t2=input("Enter item name which u want to delete:")
                         if(t2 in self.data):            # check if the item is in data which user wants to delete
                             del self.data[t2]       # If it is delete it from data
 
-                            with open("Add_to_cart.json", "w") as File2:        # updata the json file for updated data
+                        with open("Add_to_cart.json", "w") as File2:        # updata the json file for updated data
                                 json.dump(self.data,File2)
-                            print(" U r Updated  order is: ")
-                            obj1=Payment()
-                            obj1.Read_file()
-                            obj1.payment_display()
+                        print(" U r order is Updated.check it in Payment displaybill.. ")
 
 
+    def Bill_pay(self,a):
+     if(a[2]=="paybill"):
 
-
-
-
-
-    def Bill_pay(self):
         print("Payment Mode:")
         self.d=dict()
         self.d[1]="Paytm"
@@ -88,6 +95,7 @@ class Payment:
                 break
              else:
                 print("Enter Correct Pin..")
+                print("----------------------------")
                 t = input("Enter u r Paytm four digit code:")
         elif(t=="2"):
             print("Enter u r NetBanking Details:")
@@ -101,6 +109,7 @@ class Payment:
                 break
             else:
                 print("Enter Correct Password:")
+                print("--------------------------")
                 t1=input("Password: ")
         elif(t=="3" or t=="4"):
             t=input("Enter Card Details:")
@@ -113,25 +122,17 @@ class Payment:
                 break
             else:
                 print("Enter Correct Pin..")
+                print("-------------------------")
                 t=input("Enter 3 digit pin: ")
         while(self.payment=="Done"):
             with open("Order.json","w") as File1:          # Whwn payment is done add ordercode to the json file
                 json.dump(self.ordercode,File1)
             File1.close()
+            print("-------------------------------------------------------------")
+            print("Pls Write 'Order display' to get the confirmation of order..")
+            print("--------------------------------------------------------------")
             break
 
 
 
 
-            #     elif(i in l and k=="Sabji"):
-            #         print(i+"    "+str(j)+"    "+str(50)+"    "+str(j*50))
-            #
-            #     elif(i in l and k=="Salad"):
-            #         print(i+"    "+str(j)+"    "+str(50)+"    "+str(j*50))
-            #
-            #     elif(i in l and k=="South_Indian"):
-            #         print(i+"    "+str(j)+"    "+str(10)+"    "+str(j*10))
-            #
-            #     elif(i in l and k=="Dessert"):
-            #         print(i+"    "+str(j)+"    "+str(100)+"    "+str(j*100))
-            #
